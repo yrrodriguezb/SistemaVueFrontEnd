@@ -1,31 +1,281 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
-  </div>
+  <v-app id="app">
+    <v-navigation-drawer
+      fixed
+      :clipped="$vuetify.breakpoint.mdAndUp"
+      app
+      v-model="drawer"
+      v-if="authenticated"
+    >
+      <v-list dense>
+        <template v-if="IsAdmin || IsStorer || IsSeller">
+          <v-list-tile :to="{name:'home'}">
+            <v-list-tile-action>
+              <v-icon>home</v-icon>
+            </v-list-tile-action>
+            <v-list-tile-title>
+              Inicio
+            </v-list-tile-title>
+          </v-list-tile>
+        </template>
+        <template v-if="IsAdmin || IsStorer"> 
+          <v-list-group>
+            <v-list-tile slot="activator">
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Almacén
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile :to="{ name: 'categorias'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Categorías
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile :to="{ name: 'articulos'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Artículos
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+
+          </v-list-group>
+        </template>
+        <template v-if="IsAdmin || IsStorer">
+          <v-list-group>
+            <v-list-tile slot="activator">
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Compras
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile :to="{ name: 'ingresos'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Ingresos
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile :to="{ name: 'proveedores'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Proveedores
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+
+          </v-list-group>
+        </template>
+        <template v-if="IsAdmin || IsSeller">
+          <v-list-group>
+            <v-list-tile slot="activator">
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Ventas
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile :to="{ name: 'ventas'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Ventas
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile :to="{ name: 'clientes'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Clientes
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+
+          </v-list-group>
+        </template>
+        <template v-if="IsAdmin">
+          <v-list-group>
+            <v-list-tile slot="activator">
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Accesos
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile :to="{ name: 'roles'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Roles
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile :to="{ name: 'usuarios'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Usuarios
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+
+          </v-list-group>
+        </template>
+        <template v-if="IsAdmin">
+          <v-list-group>
+            <v-list-tile slot="activator">
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Consultas
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile :to="{ name: ''}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Consultas compras
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile :to="{ name: 'consultaventas' }">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Consultas ventas
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+
+          </v-list-group>
+        </template>
+      </v-list>
+    </v-navigation-drawer>
+    <v-toolbar
+      color="blue darken-3"
+      dark
+      app
+      :clipped-left="$vuetify.breakpoint.mdAndUp"
+      fixed
+    >
+      <v-toolbar-title style="width: 300px" class="ml-0 pl-3">
+        <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
+        <span class="hidden-sm-and-down">Sistema</span>
+      </v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-btn 
+        class="ml-0 pr-40"
+        v-if="authenticated" 
+        @click="logout" 
+        icon>
+        <v-icon>logout</v-icon> Logout 
+      </v-btn>
+      <v-btn 
+        class="ml-0 pr-40"
+        v-else 
+        :to="{ name: 'login' }"
+        icon>
+        <v-icon>apps</v-icon> Login
+      </v-btn>
+    </v-toolbar>
+    <v-content>
+      <v-container fluid fill-height>
+        <v-slide-y-transition mode="out-in">
+          <router-view/>
+        </v-slide-y-transition>
+      </v-container>
+    </v-content>
+    <v-footer dark height="auto">
+      <v-layout justify-center>
+        <v-flex text-xs-center>
+          <v-card flat tile color="primary" class="white--text">
+            <v-card-text class="white--text pt-0">
+              IncanatoIT &copy;2018
+            </v-card-text>
+          </v-card>
+        </v-flex>
+      </v-layout>
+    </v-footer>
+
+  </v-app>
 </template>
 
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-#nav {
-  padding: 30px;
-}
+<script>
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
+export default {
+  name: 'App',
+  
+  data () {
+    return {
+      clipped: false,
+      drawer: true,
+      fixed: false,
+      items: [{
+        icon: 'bubble_chart',
+        title: 'Inspire'
+      }],
+      miniVariant: false,
+      right: true,
+      rightDrawer: false,
+      title: 'Vuetify.js'
+    }
+  },
 
-#nav a.router-link-exact-active {
-  color: #42b983;
+  computed: {
+    authenticated () {
+      return this.$store.state.usuario;
+    },
+
+    IsAdmin () {
+      return this.$store.state.usuario && this.$store.state.usuario.rol == "Administrador";
+    },
+
+    IsStorer () {
+      return this.$store.state.usuario && this.$store.state.usuario.rol == "Almacenero";
+    },
+
+    IsSeller () {
+      return this.$store.state.usuario && this.$store.state.usuario.rol == "Vendedor";
+    }
+  },
+
+  created () {
+    this.$store.dispatch('autoLogin');
+  },
+
+  methods: {
+    logout () {
+      this.$store.dispatch('logout');
+    }
+  }
 }
-</style>
+</script>
